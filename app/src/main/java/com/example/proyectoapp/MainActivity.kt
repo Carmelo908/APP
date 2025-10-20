@@ -18,7 +18,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.proyectoapp.ui.theme.ProyectoAPPTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,53 +38,78 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ProyectoAPPTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                    AppNavigation()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(modifier: Modifier = Modifier) {
-    var email: String by remember { mutableStateOf("") }
-    var password: String by remember { mutableStateOf("") }
+fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
+    var email: String by rememberSaveable() { mutableStateOf("") }
+    var password: String by rememberSaveable { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "Asistente para docentes",
-            color = Color.Black,
-            modifier = Modifier.padding(bottom = 30.dp),
-            fontSize = 3.em
-        )
-        Image(
-            painter = painterResource(id = R.drawable.logo_escuela),
-            contentDescription = "Logo de la Escuela Técnica N°2"
-        )
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            placeholder = { Text("Correo electronico") },
-            modifier = Modifier.padding(20.dp)
-        )
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Contraseña") },
-            placeholder = { Text("Contraseña") },
-            modifier = Modifier.padding(20.dp)
-        )
-        Button(onClick = { }, content = { Text("Iniciar sesion") })
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Asistente para docentes",
+                color = Color.White,
+                modifier = Modifier.padding(bottom = 30.dp),
+                fontSize = 3.em
+            )
+            Image(
+                painter = painterResource(id = R.drawable.logo_escuela),
+                contentDescription = "Logo de la Escuela Técnica N°2"
+            )
+            TextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                placeholder = { Text("Correo electronico") },
+                modifier = Modifier.padding(20.dp)
+            )
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Contraseña") },
+                placeholder = { Text("Contraseña") },
+                modifier = Modifier.padding(20.dp)
+            )
+            Button(
+                onClick = { navController.navigate(AppScreens.CoursesScreen) },
+                content = { Text("Iniciar sesion") })
+        }
+    }
+}
+@Composable
+fun CoursesScreen(navController: NavController, modifier: Modifier = Modifier) {
+    Scaffold { innerPadding ->
+        Text(text = "Bienvenido, profesor", modifier = modifier.padding(innerPadding))
+    }
+}
+
+sealed class AppScreens(val route: String) {
+    object LoginScreen: AppScreens("login_screen")
+    object CoursesScreen: AppScreens("courses_screen")
+}
+
+@Composable
+fun AppNavigation(modifier: Modifier = Modifier) {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = AppScreens.LoginScreen.route) {
+        composable(route = AppScreens.LoginScreen.route) {
+            LoginScreen(navController, modifier = modifier)
+        }
+        composable(route = AppScreens.CoursesScreen.route) {
+            CoursesScreen(navController, modifier = modifier)
+        }
     }
 }
