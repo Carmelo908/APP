@@ -1,6 +1,7 @@
 package com.example.proyectoapp
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -84,7 +85,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(20.dp)
             )
             Button(
-                onClick = { navController.navigate(AppScreens.CoursesScreen) },
+                onClick = { navController.navigate(AppScreens.CoursesScreen.route) },
                 content = { Text("Iniciar sesion") })
         }
     }
