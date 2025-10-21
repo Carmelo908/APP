@@ -14,6 +14,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -25,11 +26,29 @@ import androidx.compose.ui.unit.em
 import androidx.navigation.NavController
 import com.example.proyectoapp.AppScreens
 import com.example.proyectoapp.R
+import com.example.proyectoapp.data.model.LoginRequest
+import com.example.proyectoapp.data.model.LoginResponse
+import com.example.proyectoapp.data.network.ApiService
+import kotlinx.coroutines.launch
+
+suspend fun LoginController(navController: NavController, email: String, password: String): LoginResponse
+{
+    val api = ApiService.create()
+
+    val loginRequest: LoginRequest = LoginRequest(email, password)
+
+    val response: LoginResponse = api.login(loginRequest = loginRequest)
+
+    return response
+}
+
 
 @Composable
 fun LoginScreen(navController: NavController) {
+    val scope = rememberCoroutineScope()
     var email: String by rememberSaveable() { mutableStateOf("") }
     var password: String by rememberSaveable { mutableStateOf("") }
+    var token: String by rememberSaveable { mutableStateOf("") }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
@@ -66,8 +85,17 @@ fun LoginScreen(navController: NavController) {
                 modifier = Modifier.padding(20.dp)
             )
             Button(
-                onClick = { navController.navigate(AppScreens.CoursesScreen.route) },
-                content = { Text("Iniciar sesion") })
+                onClick = {
+                    scope.launch {
+                        val response: LoginResponse = LoginController(navController, email, password)
+
+                        token = response.access_token
+                    }
+                },
+                content = { Text("Iniciar sesion") }
+            )
+
+            Text(text = token)
         }
     }
 }
