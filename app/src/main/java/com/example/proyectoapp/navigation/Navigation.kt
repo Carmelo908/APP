@@ -36,10 +36,6 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             HomeScreen(navController)
         }
 
-        composable(route = StudentScreen.route) {
-            StudentScreen(navController)
-        }
-
         composable(route = CourseScreen.route) {
             CourseScreen(navController)
         }
@@ -60,12 +56,6 @@ fun BottomBar(navController: NavController) {
             onClick = { navController.navigate(HomeScreen.route) },
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
             label = { Text("Home") }
-        )
-        NavigationBarItem(
-            selected = currentRoute == StudentScreen.route,
-            onClick = { navController.navigate(StudentScreen.route) },
-            icon = { Icon(Icons.Default.Person, contentDescription = "Estudiantes") },
-            label = { Text("Estudiantes") }
         )
         NavigationBarItem(
             selected = currentRoute == CourseScreen.route,

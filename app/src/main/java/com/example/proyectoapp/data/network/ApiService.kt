@@ -14,7 +14,7 @@ import retrofit2.http.POST
 
 interface ApiService {
     companion object {
-        private const val BASE_URL = "http://192.168.10.1:8000/"
+        private const val BASE_URL = "http://45.234.32.91:8000/"
 
         fun create(): ApiService {
             return Retrofit.Builder()
@@ -32,4 +32,8 @@ interface ApiService {
 
     @GET("students")
     suspend fun getAllStudents(@Header("Authorization") token: String?): Response<StudentsResponse>
+
+    @POST("/logout")
+    suspend fun logoutUser(@Header("Authorization") token: String?)
+
 }
