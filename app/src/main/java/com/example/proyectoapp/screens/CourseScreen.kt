@@ -1,8 +1,8 @@
 package com.example.proyectoapp.screens
 
-import androidx.compose.foundation.layout.PaddingValues
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,11 +17,11 @@ import com.example.proyectoapp.navigation.BottomBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun CourseScreen(navController: NavController)
+{
     Scaffold (
-        bottomBar = {
-            BottomBar(navController)
-        },
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = { BottomBar(navController) },
         topBar = {
             TopAppBar(
                 title = { Text("EduTrack") },
@@ -30,8 +30,8 @@ fun HomeScreen(navController: NavController) {
                     titleContentColor = Color.Black      // color del texto
                 )
             )
-        }
+        },
     ) { innerPadding ->
-        Text(text = "Inicio", modifier = Modifier.padding(innerPadding))
+        Text("Cursos", modifier = Modifier.padding(innerPadding))
     }
 }

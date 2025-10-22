@@ -1,0 +1,128 @@
+package com.example.proyectoapp.screens
+
+import android.content.Context
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.Center
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.proyectoapp.data.UserPreferences
+import com.example.proyectoapp.data.model.Student
+import com.example.proyectoapp.data.model.StudentsResponse
+import com.example.proyectoapp.data.network.ApiService
+import com.example.proyectoapp.navigation.BottomBar
+import kotlinx.coroutines.flow.firstOrNull
+
+suspend fun getStudents(context: Context): StudentsResponse? {
+    val api = ApiService.create()
+
+    val token = UserPreferences(context).token.firstOrNull()
+
+    val response = api.getAllStudents(token)
+
+    val students: StudentsResponse? = response.body()
+
+    return students
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun StudentScreen(navController: NavController) {
+    var isLoading by remember { mutableStateOf(true) }
+    var students by remember { mutableStateOf<List<Student>>(emptyList()) }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        try {
+            val response = getStudents(context)
+            students = response?.students ?: emptyList()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            isLoading = false
+        }
+    }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = { BottomBar(navController) },
+        topBar = {
+            TopAppBar(
+                title = { Text("EduTrack") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White,
+                    titleContentColor = Color.Black
+                )
+            )
+        }
+    ) { innerPadding ->
+        if (isLoading) {
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator(
+                    color = Color(0xFF6200EE),
+                    strokeWidth = 4.dp
+                )
+                Text("Cargando estudiantes...")
+            }
+        } else {
+            if (students.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text("No hay estudiantes disponibles", fontSize = 18.sp)
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                ) {
+                    items(students) { student ->
+                        Text(
+                            text = "${student.name} ${student.surname}",
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
