@@ -1,8 +1,12 @@
 package com.example.proyectoapp.screens
 
 import android.content.Context
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -14,6 +18,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -22,6 +27,7 @@ import com.example.proyectoapp.data.UserPreferences
 import com.example.proyectoapp.data.network.ApiService
 import com.example.proyectoapp.navigation.AppScreens
 import com.example.proyectoapp.navigation.BottomBar
+import com.example.proyectoapp.ui.layouts.AppLayout
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlin.math.log
@@ -31,22 +37,14 @@ import kotlin.math.log
 fun HomeScreen(navController: NavController) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    Scaffold (
-        bottomBar = {
-            BottomBar(navController)
-        },
-        topBar = {
-            TopAppBar(
-                title = { Text("EduTrack") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black
-                )
-            )
-        }
-    ) { innerPadding ->
-        Column {
-            Text(text = "Inicio", modifier = Modifier.padding(innerPadding))
+
+    AppLayout (navController, "EduTrack") { innerPadding ->
+        Column (
+            modifier = Modifier.padding(innerPadding).fillMaxWidth().fillMaxHeight().background(Color.White),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Text(text = "Inicio")
 
             Button(onClick = {
                 scope.launch {
