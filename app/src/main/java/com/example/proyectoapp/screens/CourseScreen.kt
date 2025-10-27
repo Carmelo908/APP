@@ -1,10 +1,8 @@
 package com.example.proyectoapp.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -17,7 +15,7 @@ import com.example.proyectoapp.navigation.BottomBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CourseScreen(navController: NavController)
+fun CourseScreen(navController: NavController, course_id: Int)
 {
     Scaffold (
         modifier = Modifier.fillMaxSize(),
@@ -26,12 +24,12 @@ fun CourseScreen(navController: NavController)
             TopAppBar(
                 title = { Text("EduTrack") },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White, // color de fondo
-                    titleContentColor = Color.Black      // color del texto
+                    containerColor = Color.White,
+                    titleContentColor = Color.Black
                 )
             )
         },
     ) { innerPadding ->
-        Text("Cursos", modifier = Modifier.padding(innerPadding))
+        Text("Curso", modifier = Modifier.padding(innerPadding))
     }
 }

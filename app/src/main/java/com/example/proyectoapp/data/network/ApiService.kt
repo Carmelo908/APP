@@ -1,5 +1,6 @@
 package com.example.proyectoapp.data.network
 
+import com.example.proyectoapp.data.model.Course
 import com.example.proyectoapp.data.model.LoginRequest
 import com.example.proyectoapp.data.model.LoginResponse
 import com.example.proyectoapp.data.model.StudentsResponse
@@ -14,7 +15,7 @@ import retrofit2.http.POST
 
 interface ApiService {
     companion object {
-        private const val BASE_URL = "http://45.234.32.91:8000/"
+        private const val BASE_URL = "http://192.168.10.122:8000"
 
         fun create(): ApiService {
             return Retrofit.Builder()
@@ -30,10 +31,15 @@ interface ApiService {
     @GET("me")
     suspend fun me(@Header("Authorization") token: String?): Response<User>
 
+    @GET("courses")
+    suspend fun getCourses(@Header("Authorization") token: String?): Response<List<Course>>
+
     @GET("students")
     suspend fun getAllStudents(@Header("Authorization") token: String?): Response<StudentsResponse>
 
-    @POST("/logout")
+    @POST("logout")
     suspend fun logoutUser(@Header("Authorization") token: String?)
 
+    @GET(value = "courses/{course_id}/students")
+    suspend fun getStudentsByCourse(@Header(value = "Authorization") token: String?)
 }

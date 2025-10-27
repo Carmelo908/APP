@@ -39,8 +39,8 @@ fun HomeScreen(navController: NavController) {
             TopAppBar(
                 title = { Text("EduTrack") },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White, // color de fondo
-                    titleContentColor = Color.Black      // color del texto
+                    containerColor = Color.White,
+                    titleContentColor = Color.Black
                 )
             )
         }

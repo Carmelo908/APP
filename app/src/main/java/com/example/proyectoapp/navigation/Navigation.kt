@@ -3,7 +3,6 @@ package com.example.proyectoapp.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -15,13 +14,16 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.proyectoapp.navigation.AppScreens.*
 import com.example.proyectoapp.screens.CourseScreen
+import com.example.proyectoapp.screens.CoursesScreen
 import com.example.proyectoapp.screens.HomeScreen
 import com.example.proyectoapp.screens.LoginScreen
-import com.example.proyectoapp.screens.StudentScreen
 
 
 @Composable
@@ -36,8 +38,17 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             HomeScreen(navController)
         }
 
-        composable(route = CourseScreen.route) {
-            CourseScreen(navController)
+        composable(route = CoursesScreen.route) {
+            CoursesScreen(navController)
+        }
+
+        composable(
+            route = CourseScreen.route,
+            arguments = listOf(navArgument("course_id") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val course_id = backStackEntry.arguments?.getInt("course_id") ?: 1
+
+            CourseScreen(navController, course_id)
         }
     }
 }
@@ -58,8 +69,8 @@ fun BottomBar(navController: NavController) {
             label = { Text("Home") }
         )
         NavigationBarItem(
-            selected = currentRoute == CourseScreen.route,
-            onClick = { navController.navigate(CourseScreen.route) },
+            selected = currentRoute == CoursesScreen.route,
+            onClick = { navController.navigate(CoursesScreen.route) },
             icon = { Icon(Icons.Default.DateRange, contentDescription = "Cursos") },
             label = { Text("Cursos") }
         )
