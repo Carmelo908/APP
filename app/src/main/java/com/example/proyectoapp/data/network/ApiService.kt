@@ -19,7 +19,7 @@ import retrofit2.http.Path
 
 interface ApiService {
     companion object {
-        private const val BASE_URL = "http://192.168.10.122:8000"
+        private const val BASE_URL = "https://api-asistente-de-notas.ferchudev.com/"
 
         fun create(): ApiService {
             return Retrofit.Builder()

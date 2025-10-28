@@ -53,7 +53,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 data class NoAuthenticated(val message: String)
 
-suspend fun IsAuthenticated(context: Context): Boolean
+suspend fun isAuthenticated(context: Context): Boolean
 {
     val api = ApiService.create()
 
@@ -68,7 +68,7 @@ suspend fun IsAuthenticated(context: Context): Boolean
     }
 }
 
-suspend fun LoginController( email: String, password: String): LoginResponse? {
+suspend fun loginController( email: String, password: String): LoginResponse? {
     val api = ApiService.create()
 
     val loginRequest: LoginRequest = LoginRequest(email, password)
@@ -87,7 +87,7 @@ fun LoginScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        val authenticated = IsAuthenticated(context)
+        val authenticated = isAuthenticated(context)
         if (authenticated) {
             navController.navigate(AppScreens.HomeScreen.route) {
                 popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
@@ -177,7 +177,7 @@ fun LoginScreen(navController: NavController) {
                 Button(
                     onClick = {
                         scope.launch {
-                            val response: LoginResponse? = LoginController(email, password)
+                            val response: LoginResponse? = loginController(email, password)
                             if (response != null) {
                                 val dataStore = UserPreferences(context)
                                 dataStore.saveToken("${response.token_type} ${response.access_token}")
