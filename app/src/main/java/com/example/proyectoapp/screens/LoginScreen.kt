@@ -51,11 +51,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.example.proyectoapp.ui.layouts.LoginLayout
 
 data class NoAuthenticated(val message: String)
 
-suspend fun IsAuthenticated(context: Context): Boolean
-{
+suspend fun IsAuthenticated(context: Context): Boolean {
     val api = ApiService.create()
 
     val token = UserPreferences(context).token.firstOrNull()
@@ -69,7 +69,7 @@ suspend fun IsAuthenticated(context: Context): Boolean
     }
 }
 
-suspend fun LoginController( email: String, password: String): LoginResponse? {
+suspend fun LoginController(email: String, password: String): LoginResponse? {
     val api = ApiService.create()
 
     val loginRequest: LoginRequest = LoginRequest(email, password)
@@ -122,99 +122,104 @@ fun LoginScreen(navController: NavController) {
             return
         }
     }
-    Scaffold(
-        modifier = Modifier.fillMaxSize().imePadding(),
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 15.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                text = "EduTrack",
-                color = Color.Black,
-                modifier = Modifier.padding(bottom = 30.dp),
-                fontSize = 30.sp
-            )
+    LoginLayout() {
 
-            Image(
-                painter = painterResource(id = R.drawable.logo_escuela),
-                contentDescription = "Logo de la Escuela Técnica N°2"
-            )
+        Text(
+            text = "EduTrack",
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 30.dp),
+            fontSize = 30.sp
+        )
 
-            Spacer(modifier = Modifier.padding(30.dp))
+        Image(
+            painter = painterResource(id = R.drawable.logo_escuela),
+            contentDescription = "Logo de la Escuela Técnica N°2"
+        )
 
-            OutlinedTextField(
-                value = email,
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "emailIcon") },
-                onValueChange = {
-                    email = it
-                },
-                singleLine = true,
-                placeholder = { Text(text = "Correo electrónico") },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF6200EE),
-                    focusedLabelColor = Color(0xFF6200EE),
+        Spacer(modifier = Modifier.padding(30.dp))
+
+        OutlinedTextField(
+            value = email,
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = "emailIcon"
                 )
+            },
+            onValueChange = {
+                email = it
+            },
+            singleLine = true,
+            placeholder = { Text(text = "Correo electrónico") },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color(0xFF6200EE),
+                focusedLabelColor = Color(0xFF6200EE),
             )
+        )
 
-            Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
 
-            OutlinedTextField(
-                value = password,
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                visualTransformation = PasswordVisualTransformation(),
-                leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Password Icon") },
-                onValueChange = {
-                    password = it
-                },
-                placeholder = { Text(text = "Contraseña") },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF6200EE),
-                    focusedLabelColor = Color(0xFF6200EE),
+        OutlinedTextField(
+            value = password,
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            visualTransformation = PasswordVisualTransformation(),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = "Password Icon"
                 )
+            },
+            onValueChange = {
+                password = it
+            },
+            placeholder = { Text(text = "Contraseña") },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color(0xFF6200EE),
+                focusedLabelColor = Color(0xFF6200EE),
             )
+        )
 
-            Spacer(modifier = Modifier.padding(vertical = 20.dp))
-            Button(
-                onClick = {
-                    scope.launch {
-                        if (!ValidateLogin(email, password))
-                        {
-                            Toast.makeText(context, "Datos inválidos", Toast.LENGTH_SHORT).show()
-                            return@launch
-                        }
-                        val response: LoginResponse? = LoginController(email, password)
-                        if (response == null) {
-                            Toast.makeText(context, "Correo o contraseña incorrecta", Toast.LENGTH_SHORT).show()
-                            password = ""
-                            return@launch
-                        }
-                        val dataStore = UserPreferences(context)
-                        dataStore.saveToken("${response.token_type} ${response.access_token}")
-
-                        navController.navigate(AppScreens.HomeScreen.route) {
-                            popUpTo(0)
-                        }
+        Spacer(modifier = Modifier.padding(vertical = 20.dp))
+        Button(
+            onClick = {
+                scope.launch {
+                    if (!ValidateLogin(email, password)) {
+                        Toast.makeText(context, "Datos inválidos", Toast.LENGTH_SHORT).show()
+                        return@launch
                     }
-                },
-                modifier = Modifier.padding(horizontal = 26.dp).fillMaxWidth(),
-                content = { Text("Iniciar sesión") },
-                shape = RectangleShape,
-                colors = ButtonColors(
-                    containerColor = Color(0xFF6200EE),
-                    contentColor = Color.White,
-                    disabledContainerColor = Color.Gray,
-                    disabledContentColor = Color.White
-                )
+                    val response: LoginResponse? = LoginController(email, password)
+                    if (response == null) {
+                        Toast.makeText(
+                            context,
+                            "Correo o contraseña incorrecta",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        password = ""
+                        return@launch
+                    }
+                    val dataStore = UserPreferences(context)
+                    dataStore.saveToken("${response.token_type} ${response.access_token}")
+
+                    navController.navigate(AppScreens.HomeScreen.route) {
+                        popUpTo(0)
+                    }
+                }
+            },
+            modifier = Modifier
+                .padding(horizontal = 26.dp)
+                .fillMaxWidth(),
+            content = { Text("Iniciar sesión") },
+            shape = RectangleShape,
+            colors = ButtonColors(
+                containerColor = Color(0xFF6200EE),
+                contentColor = Color.White,
+                disabledContainerColor = Color.Gray,
+                disabledContentColor = Color.White
             )
-        }
+        )
     }
 
 }
