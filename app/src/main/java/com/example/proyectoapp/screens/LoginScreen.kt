@@ -1,6 +1,7 @@
 package com.example.proyectoapp.screens
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,7 +54,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 data class NoAuthenticated(val message: String)
 
-suspend fun isAuthenticated(context: Context): Boolean
+suspend fun IsAuthenticated(context: Context): Boolean
 {
     val api = ApiService.create()
 
@@ -68,7 +69,7 @@ suspend fun isAuthenticated(context: Context): Boolean
     }
 }
 
-suspend fun loginController( email: String, password: String): LoginResponse? {
+suspend fun LoginController( email: String, password: String): LoginResponse? {
     val api = ApiService.create()
 
     val loginRequest: LoginRequest = LoginRequest(email, password)
@@ -76,6 +77,11 @@ suspend fun loginController( email: String, password: String): LoginResponse? {
     val response = api.login(loginRequest = loginRequest)
     val loginResponse = response.body()
     return loginResponse
+}
+
+fun ValidateLogin(email: String, password: String): Boolean {
+    val emailRegex: Regex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
+    return emailRegex.matches(email) && !password.isEmpty()
 }
 
 @Composable
@@ -87,7 +93,7 @@ fun LoginScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        val authenticated = isAuthenticated(context)
+        val authenticated = IsAuthenticated(context)
         if (authenticated) {
             navController.navigate(AppScreens.HomeScreen.route) {
                 popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
@@ -113,92 +119,101 @@ fun LoginScreen(navController: NavController) {
                 fontSize = 18.sp,
                 color = Color.Gray
             )
-        }
-    } else {
-        Scaffold(
-            modifier = Modifier.fillMaxSize().imePadding(),
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 15.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    text = "EduTrack",
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 30.dp),
-                    fontSize = 30.sp
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.logo_escuela),
-                    contentDescription = "Logo de la Escuela Técnica N°2"
-                )
-
-                Spacer(modifier = Modifier.padding(30.dp))
-
-                OutlinedTextField(
-                    value = email,
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "emailIcon") },
-                    onValueChange = {
-                        email = it
-                    },
-                    placeholder = { Text(text = "Correo electrónico") },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF6200EE),
-                        focusedLabelColor = Color(0xFF6200EE),
-                    )
-                )
-
-                Spacer(modifier = Modifier.padding(10.dp))
-
-                OutlinedTextField(
-                    value = password,
-                    modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    visualTransformation = PasswordVisualTransformation(),
-                    leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Password Icon") },
-                    onValueChange = {
-                        password = it
-                    },
-                    placeholder = { Text(text = "Contraseña") },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF6200EE),
-                        focusedLabelColor = Color(0xFF6200EE),
-                    )
-                )
-
-                Spacer(modifier = Modifier.padding(vertical = 20.dp))
-                Button(
-                    onClick = {
-                        scope.launch {
-                            val response: LoginResponse? = loginController(email, password)
-                            if (response != null) {
-                                val dataStore = UserPreferences(context)
-                                dataStore.saveToken("${response.token_type} ${response.access_token}")
-
-                                navController.navigate(AppScreens.HomeScreen.route) {
-                                    popUpTo(0)
-                                }
-                            }
-                        }
-                    },
-                    modifier = Modifier.padding(horizontal = 26.dp).fillMaxWidth(),
-                    content = { Text("Iniciar sesión") },
-                    shape = RectangleShape,
-                    colors = ButtonColors(
-                        containerColor = Color(0xFF6200EE),
-                        contentColor = Color.White,
-                        disabledContainerColor = Color.Gray,
-                        disabledContentColor = Color.White
-                    )
-                )
-            }
+            return
         }
     }
+    Scaffold(
+        modifier = Modifier.fillMaxSize().imePadding(),
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                text = "EduTrack",
+                color = Color.Black,
+                modifier = Modifier.padding(bottom = 30.dp),
+                fontSize = 30.sp
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.logo_escuela),
+                contentDescription = "Logo de la Escuela Técnica N°2"
+            )
+
+            Spacer(modifier = Modifier.padding(30.dp))
+
+            OutlinedTextField(
+                value = email,
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "emailIcon") },
+                onValueChange = {
+                    email = it
+                },
+                placeholder = { Text(text = "Correo electrónico") },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF6200EE),
+                    focusedLabelColor = Color(0xFF6200EE),
+                )
+            )
+
+            Spacer(modifier = Modifier.padding(10.dp))
+
+            OutlinedTextField(
+                value = password,
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation = PasswordVisualTransformation(),
+                leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Password Icon") },
+                onValueChange = {
+                    password = it
+                },
+                placeholder = { Text(text = "Contraseña") },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF6200EE),
+                    focusedLabelColor = Color(0xFF6200EE),
+                )
+            )
+
+            Spacer(modifier = Modifier.padding(vertical = 20.dp))
+            Button(
+                onClick = {
+                    scope.launch {
+                        if (ValidateLogin(email, password))
+                        {
+                            Toast.makeText(context, "Datos inválidos", Toast.LENGTH_SHORT).show()
+                            return@launch
+                        }
+                        val response: LoginResponse? = LoginController(email, password)
+                        if (response == null) {
+                            Toast.makeText(context, "Correo o contraseña incorrecta", Toast.LENGTH_SHORT).show()
+                            password = ""
+                            return@launch
+                        }
+                        val dataStore = UserPreferences(context)
+                        dataStore.saveToken("${response.token_type} ${response.access_token}")
+
+                        navController.navigate(AppScreens.HomeScreen.route) {
+                            popUpTo(0)
+                        }
+                    }
+                },
+                modifier = Modifier.padding(horizontal = 26.dp).fillMaxWidth(),
+                content = { Text("Iniciar sesión") },
+                shape = RectangleShape,
+                colors = ButtonColors(
+                    containerColor = Color(0xFF6200EE),
+                    contentColor = Color.White,
+                    disabledContainerColor = Color.Gray,
+                    disabledContentColor = Color.White
+                )
+            )
+        }
+    }
+
 }
