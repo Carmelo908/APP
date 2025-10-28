@@ -2,16 +2,25 @@ package com.example.proyectoapp.screens
 
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,7 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -35,9 +44,12 @@ import com.example.proyectoapp.data.model.LoginRequest
 import com.example.proyectoapp.data.model.LoginResponse
 import com.example.proyectoapp.data.network.ApiService
 import com.example.proyectoapp.navigation.AppScreens
-import com.example.proyectoapp.navigation.BottomBar
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 data class NoAuthenticated(val message: String)
 
@@ -104,14 +116,15 @@ fun LoginScreen(navController: NavController) {
         }
     } else {
         Scaffold(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().imePadding(),
         ) { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
+                    .padding(innerPadding)
+                    .padding(horizontal = 15.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
                 Text(
                     text = "EduTrack",
@@ -125,25 +138,42 @@ fun LoginScreen(navController: NavController) {
                     contentDescription = "Logo de la Escuela Técnica N°2"
                 )
 
-                TextField(
+                Spacer(modifier = Modifier.padding(30.dp))
+
+                OutlinedTextField(
                     value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Email") },
-                    placeholder = { Text("Correo electronico") },
-                    modifier = Modifier.padding(20.dp),
-                    shape = RoundedCornerShape(20.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "emailIcon") },
+                    onValueChange = {
+                        email = it
+                    },
+                    placeholder = { Text(text = "Correo electrónico") },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF6200EE),
+                        focusedLabelColor = Color(0xFF6200EE),
+                    )
                 )
 
-                TextField(
+                Spacer(modifier = Modifier.padding(10.dp))
+
+                OutlinedTextField(
                     value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Contraseña") },
-                    placeholder = { Text("Contraseña") },
-                    modifier = Modifier.padding(20.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    visualTransformation = PasswordVisualTransformation()
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    visualTransformation = PasswordVisualTransformation(),
+                    leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Password Icon") },
+                    onValueChange = {
+                        password = it
+                    },
+                    placeholder = { Text(text = "Contraseña") },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF6200EE),
+                        focusedLabelColor = Color(0xFF6200EE),
+                    )
                 )
 
+                Spacer(modifier = Modifier.padding(vertical = 20.dp))
                 Button(
                     onClick = {
                         scope.launch {
@@ -158,7 +188,15 @@ fun LoginScreen(navController: NavController) {
                             }
                         }
                     },
-                    content = { Text("Iniciar sesión") }
+                    modifier = Modifier.padding(horizontal = 26.dp).fillMaxWidth(),
+                    content = { Text("Iniciar sesión") },
+                    shape = RectangleShape,
+                    colors = ButtonColors(
+                        containerColor = Color(0xFF6200EE),
+                        contentColor = Color.White,
+                        disabledContainerColor = Color.Gray,
+                        disabledContentColor = Color.White
+                    )
                 )
             }
         }
