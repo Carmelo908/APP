@@ -155,6 +155,7 @@ fun LoginScreen(navController: NavController) {
                 onValueChange = {
                     email = it
                 },
+                singleLine = true,
                 placeholder = { Text(text = "Correo electrónico") },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF6200EE),
@@ -184,7 +185,7 @@ fun LoginScreen(navController: NavController) {
             Button(
                 onClick = {
                     scope.launch {
-                        if (ValidateLogin(email, password))
+                        if (!ValidateLogin(email, password))
                         {
                             Toast.makeText(context, "Datos inválidos", Toast.LENGTH_SHORT).show()
                             return@launch
