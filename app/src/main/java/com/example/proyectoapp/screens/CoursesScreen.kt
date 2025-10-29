@@ -110,14 +110,18 @@ fun CoursesScreen(navController: NavController) {
                         }
                     }
                 }
-                Spacer(modifier = Modifier
-                    .height(16.dp)
-                    .padding(innerPadding))
+                Spacer(
+                    modifier = Modifier
+                        .height(16.dp)
+                        .padding(innerPadding)
+                )
 
-                ButtonAdd(modifier = Modifier
-                    .padding(innerPadding)
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
-                    .align(Alignment.BottomEnd))
+                ButtonAdd(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                        .align(Alignment.BottomEnd)
+                )
                 {
 
                 }

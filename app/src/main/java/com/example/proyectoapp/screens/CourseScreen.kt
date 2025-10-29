@@ -72,8 +72,8 @@ fun CourseScreen(navController: NavController, courseID: Int) {
                 Text("Cargando alumnos...", color = Color.Red)
             }
         } else {
-            if(students.isEmpty()) {
-                Text("No hay alumnos en el curso ta ta",modifier = Modifier.padding(innerPadding))
+            if (students.isEmpty()) {
+                Text("No hay alumnos en el curso ta ta", modifier = Modifier.padding(innerPadding))
                 return@AppLayout
             }
 

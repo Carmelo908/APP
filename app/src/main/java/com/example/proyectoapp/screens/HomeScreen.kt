@@ -30,9 +30,13 @@ fun HomeScreen(navController: NavController) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    AppLayout (navController, "EduTrack") { innerPadding ->
-        Column (
-            modifier = Modifier.padding(innerPadding).fillMaxWidth().fillMaxHeight().background(Color.White),
+    AppLayout(navController, "EduTrack") { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .background(Color.White),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -50,8 +54,7 @@ fun HomeScreen(navController: NavController) {
     }
 }
 
-suspend fun logout(context: Context)
-{
+suspend fun logout(context: Context) {
     val api = ApiService.create()
 
     val dataStore = UserPreferences(context)

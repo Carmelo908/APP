@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun ButtonAdd(modifier: Modifier, onClick: () -> Unit) {
-    Button (
+    Button(
         modifier = modifier,
         shape = RoundedCornerShape(10), // botón redondeado
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF174071)),

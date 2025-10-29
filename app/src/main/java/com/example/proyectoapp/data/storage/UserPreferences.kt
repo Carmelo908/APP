@@ -28,6 +28,5 @@ class UserPreferences(private val context: Context) {
         }
     }
 
-    val token: Flow<String?> = context.dataStore.data
-        .map { prefs -> prefs[TOKEN_KEY] }
+    val token: Flow<String?> = context.dataStore.data.map { prefs -> prefs[TOKEN_KEY] }
 }

@@ -21,7 +21,9 @@ fun StudentsGrid(students: List<Student>, innerPadding: PaddingValues) {
 
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier.padding(innerPadding).fillMaxWidth(0.9f)
+        modifier = Modifier
+            .padding(innerPadding)
+            .fillMaxWidth(0.9f)
     ) {
         items(items = students) { student ->
             Text(student.name)

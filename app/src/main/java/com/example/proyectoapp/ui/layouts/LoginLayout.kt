@@ -17,7 +17,9 @@ fun LoginLayout(
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize().imePadding(),
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding(),
     ) { innerPadding ->
         Column(
             modifier = Modifier

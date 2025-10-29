@@ -52,5 +52,8 @@ interface ApiService {
     ): Response<List<Student>>
 
     @POST
-    suspend fun createCourse(@Header("Authorization") token: String?, @Body course: CoursePostRequest): CoursePostResponse
+    suspend fun createCourse(
+        @Header("Authorization") token: String?,
+        @Body course: CoursePostRequest
+    ): CoursePostResponse
 }
