@@ -14,5 +14,8 @@ enum class InstancesTypes {
 }
 
 
-
-data class EvaluationInstance(var type: InstancesTypes, var instanceDate: Date, var qualifications: Map<Int, String>)
+data class EvaluationInstance(
+    var type: InstancesTypes,
+    var instanceDate: Date,
+    var qualifications: HashMap<Int, String>
+)
