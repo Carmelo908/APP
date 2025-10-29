@@ -3,59 +3,43 @@ package com.example.proyectoapp.screens
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.proyectoapp.R
-import com.example.proyectoapp.data.UserPreferences
+import com.example.proyectoapp.data.storage.UserPreferences
 import com.example.proyectoapp.data.model.LoginRequest
 import com.example.proyectoapp.data.model.LoginResponse
 import com.example.proyectoapp.data.network.ApiService
 import com.example.proyectoapp.navigation.AppScreens
+import com.example.proyectoapp.ui.layouts.LoginLayout
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import com.example.proyectoapp.ui.layouts.LoginLayout
 
 data class NoAuthenticated(val message: String)
 
-suspend fun IsAuthenticated(context: Context): Boolean {
+suspend fun isAuthenticated(context: Context): Boolean {
     val api = ApiService.create()
 
     val token = UserPreferences(context).token.firstOrNull()
@@ -64,23 +48,23 @@ suspend fun IsAuthenticated(context: Context): Boolean {
 
     return try {
         response.isSuccessful
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         false
     }
 }
 
-suspend fun LoginController(email: String, password: String): LoginResponse? {
+suspend fun loginController(email: String, password: String): LoginResponse? {
     val api = ApiService.create()
 
-    val loginRequest: LoginRequest = LoginRequest(email, password)
+    val loginRequest = LoginRequest(email, password)
 
     val response = api.login(loginRequest = loginRequest)
     val loginResponse = response.body()
     return loginResponse
 }
 
-fun ValidateLogin(email: String, password: String): Boolean {
-    val emailRegex: Regex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
+fun validateLogin(email: String, password: String): Boolean {
+    val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
     return emailRegex.matches(email) && !password.isEmpty()
 }
 
@@ -93,7 +77,7 @@ fun LoginScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        val authenticated = IsAuthenticated(context)
+        val authenticated = isAuthenticated(context)
         if (authenticated) {
             navController.navigate(AppScreens.HomeScreen.route) {
                 popUpTo(AppScreens.LoginScreen.route) { inclusive = true }
@@ -114,7 +98,7 @@ fun LoginScreen(navController: NavController) {
                 strokeWidth = 4.dp
             )
             Text(
-                text = "Cargando...",
+                text = "Candor...",
                 modifier = Modifier.padding(top = 16.dp),
                 fontSize = 18.sp,
                 color = Color.Gray
@@ -122,7 +106,7 @@ fun LoginScreen(navController: NavController) {
             return
         }
     }
-    LoginLayout() {
+    LoginLayout {
 
         Text(
             text = "EduTrack",
@@ -186,11 +170,14 @@ fun LoginScreen(navController: NavController) {
         Button(
             onClick = {
                 scope.launch {
-                    if (!ValidateLogin(email, password)) {
-                        Toast.makeText(context, "Datos inválidos", Toast.LENGTH_SHORT).show()
+                    if (!validateLogin(email, password)) {
+                        Toast.makeText(
+                            context, "Datos inválidos",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         return@launch
                     }
-                    val response: LoginResponse? = LoginController(email, password)
+                    val response: LoginResponse? = loginController(email, password)
                     if (response == null) {
                         Toast.makeText(
                             context,
@@ -201,7 +188,8 @@ fun LoginScreen(navController: NavController) {
                         return@launch
                     }
                     val dataStore = UserPreferences(context)
-                    dataStore.saveToken("${response.token_type} ${response.access_token}")
+                    val token = "${response.token_type} ${response.access_token}"
+                    dataStore.saveToken(token)
 
                     navController.navigate(AppScreens.HomeScreen.route) {
                         popUpTo(0)

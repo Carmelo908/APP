@@ -7,5 +7,5 @@ sealed class AppScreens(val route: String) {
 
     object CoursesScreen: AppScreens("courses_screen")
 
-    object CourseScreen: AppScreens("course_screen/{course_id}")
+    object CourseScreen: AppScreens("course_screen/{courseID}")
 }

@@ -8,18 +8,19 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.proyectoapp.navigation.AppScreens.*
+import com.example.proyectoapp.navigation.AppScreens.CourseScreen
+import com.example.proyectoapp.navigation.AppScreens.CoursesScreen
+import com.example.proyectoapp.navigation.AppScreens.HomeScreen
+import com.example.proyectoapp.navigation.AppScreens.LoginScreen
 import com.example.proyectoapp.screens.CourseScreen
 import com.example.proyectoapp.screens.CoursesScreen
 import com.example.proyectoapp.screens.HomeScreen
@@ -27,7 +28,7 @@ import com.example.proyectoapp.screens.LoginScreen
 
 
 @Composable
-fun AppNavigation(modifier: Modifier = Modifier) {
+fun AppNavigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = LoginScreen.route) {
         composable(route = LoginScreen.route) {
@@ -44,11 +45,11 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
         composable(
             route = CourseScreen.route,
-            arguments = listOf(navArgument("course_id") { type = NavType.IntType })
+            arguments = listOf(navArgument("courseID") { type = NavType.IntType })
         ) { backStackEntry ->
-            val course_id = backStackEntry.arguments?.getInt("course_id") ?: 1
+            val courseID = backStackEntry.arguments?.getInt("courseID") ?: 1
 
-            CourseScreen(navController, course_id)
+            CourseScreen(navController, courseID)
         }
     }
 }

@@ -3,7 +3,7 @@ package com.example.proyectoapp.data.model
 import java.util.Date
 import java.util.HashMap
 
-enum class instances_types {
+enum class InstancesTypes {
     homework,
     attendance,
     project,
@@ -15,4 +15,4 @@ enum class instances_types {
 
 
 
-data class EvaluationInstance(var type: instances_types, var instanceDate: Date, var qualifications: Map<Int, String>)
+data class EvaluationInstance(var type: InstancesTypes, var instanceDate: Date, var qualifications: Map<Int, String>)

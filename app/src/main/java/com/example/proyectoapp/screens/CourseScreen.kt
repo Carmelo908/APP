@@ -4,14 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,26 +19,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.proyectoapp.data.UserPreferences
+import com.example.proyectoapp.data.storage.UserPreferences
 import com.example.proyectoapp.data.model.Student
 import com.example.proyectoapp.data.network.ApiService
-import com.example.proyectoapp.navigation.BottomBar
 import com.example.proyectoapp.ui.layouts.AppLayout
 import com.example.proyectoapp.ui.components.StudentsGrid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
-import retrofit2.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CourseScreen(navController: NavController, course_id: Int) {
+fun CourseScreen(navController: NavController, courseID: Int) {
     var isLoading by remember { mutableStateOf(true) }
     var students by remember { mutableStateOf(listOf<Student>()) }
 
     val context = LocalContext.current
 
-    LaunchedEffect(course_id) {
+    LaunchedEffect(courseID) {
         isLoading = true
         try {
             val dataStore = UserPreferences(context)
@@ -51,7 +44,7 @@ fun CourseScreen(navController: NavController, course_id: Int) {
 
             val api = ApiService.create()
             val result = withContext(Dispatchers.IO) {
-                api.getStudentsByCourse(token, course_id)
+                api.getStudentsByCourse(token, courseID)
             }
 
             students = result.body() ?: emptyList()
