@@ -33,20 +33,16 @@ import kotlinx.coroutines.withContext
 fun CourseScreen(navController: NavController, courseID: Int) {
     var isLoading by remember { mutableStateOf(true) }
     var students by remember { mutableStateOf(listOf<Student>()) }
-
     val context = LocalContext.current
-
     LaunchedEffect(courseID) {
         isLoading = true
         try {
             val dataStore = UserPreferences(context)
             val token = dataStore.token.firstOrNull()
-
             val api = ApiService.create()
             val result = withContext(Dispatchers.IO) {
                 api.getStudentsByCourse(token, courseID)
             }
-
             students = result.body() ?: emptyList()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -71,13 +67,10 @@ fun CourseScreen(navController: NavController, courseID: Int) {
                 )
                 Text("Cargando alumnos...", color = Color.Red)
             }
-        } else {
-            if (students.isEmpty()) {
-                Text("No hay alumnos en el curso ta ta", modifier = Modifier.padding(innerPadding))
-                return@AppLayout
-            }
-
-            StudentsGrid(students, innerPadding)
+        } else if (students.isEmpty()) {
+            Text("No hay alumnos en el curso ta ta", modifier = Modifier.padding(innerPadding))
+            return@AppLayout
         }
+        StudentsGrid(students, innerPadding)
     }
 }

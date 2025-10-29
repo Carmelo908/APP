@@ -41,11 +41,8 @@ data class NoAuthenticated(val message: String)
 
 suspend fun isAuthenticated(context: Context): Boolean {
     val api = ApiService.create()
-
     val token = UserPreferences(context).token.firstOrNull()
-
     val response = api.me(token = token)
-
     return try {
         response.isSuccessful
     } catch (_: Exception) {
@@ -55,9 +52,7 @@ suspend fun isAuthenticated(context: Context): Boolean {
 
 suspend fun loginController(email: String, password: String): LoginResponse? {
     val api = ApiService.create()
-
     val loginRequest = LoginRequest(email, password)
-
     val response = api.login(loginRequest = loginRequest)
     val loginResponse = response.body()
     return loginResponse
@@ -169,14 +164,14 @@ fun LoginScreen(navController: NavController) {
         Spacer(modifier = Modifier.padding(vertical = 20.dp))
         Button(
             onClick = {
+                if (!validateLogin(email, password)) {
+                    Toast.makeText(
+                        context, "Datos inválidos",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
                 scope.launch {
-                    if (!validateLogin(email, password)) {
-                        Toast.makeText(
-                            context, "Datos inválidos",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return@launch
-                    }
                     val response: LoginResponse? = loginController(email, password)
                     if (response == null) {
                         Toast.makeText(

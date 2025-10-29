@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.map
 val Context.dataStore by preferencesDataStore("user_prefs")
 
 class UserPreferences(private val context: Context) {
-
     companion object {
         private val TOKEN_KEY = stringPreferencesKey("access_token")
     }
@@ -20,7 +19,6 @@ class UserPreferences(private val context: Context) {
             prefs[TOKEN_KEY] = token
         }
     }
-
 
     suspend fun clearToken() {
         context.dataStore.edit { prefs ->

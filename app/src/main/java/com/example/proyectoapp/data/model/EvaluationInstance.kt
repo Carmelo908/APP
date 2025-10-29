@@ -13,7 +13,6 @@ enum class InstancesTypes {
     others
 }
 
-
 data class EvaluationInstance(
     var type: InstancesTypes,
     var instanceDate: Date,

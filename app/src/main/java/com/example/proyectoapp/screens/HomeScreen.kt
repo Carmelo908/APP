@@ -56,7 +56,6 @@ fun HomeScreen(navController: NavController) {
 
 suspend fun logout(context: Context) {
     val api = ApiService.create()
-
     val dataStore = UserPreferences(context)
     val token = dataStore.token.firstOrNull()
     api.logoutUser(token)

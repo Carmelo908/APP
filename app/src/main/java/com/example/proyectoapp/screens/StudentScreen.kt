@@ -90,31 +90,31 @@ fun StudentScreen(navController: NavController) {
                 )
                 Text("Cargando estudiantes...")
             }
-        } else {
-            if (students.isEmpty()) {
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text("No hay estudiantes disponibles", fontSize = 18.sp)
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
-                ) {
-                    items(students) { student ->
-                        Text(
-                            text = "${student.name} ${student.surname}",
-                            fontSize = 18.sp,
-                            modifier = Modifier.padding(8.dp)
-                        )
-                    }
-                }
+            return@Scaffold
+        }
+        if (students.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text("No hay estudiantes disponibles", fontSize = 18.sp)
+            }
+            return@Scaffold
+        }
+        LazyColumn(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
+            items(students) { student ->
+                Text(
+                    text = "${student.name} ${student.surname}",
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(8.dp)
+                )
             }
         }
     }

@@ -39,12 +39,9 @@ import kotlinx.coroutines.flow.firstOrNull
 
 suspend fun getCourses(context: Context): List<Course>? {
     val api = ApiService.create()
-
     val dataStore = UserPreferences(context)
     val token = dataStore.token.firstOrNull()
-
     val courses = api.getCourses(token).body()
-
     return courses
 }
 
