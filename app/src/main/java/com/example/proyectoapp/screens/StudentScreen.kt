@@ -30,7 +30,7 @@ import com.example.proyectoapp.data.storage.UserPreferences
 import com.example.proyectoapp.data.model.Student
 import com.example.proyectoapp.data.model.StudentsResponse
 import com.example.proyectoapp.data.network.ApiService
-import com.example.proyectoapp.navigation.BottomBar
+import com.example.proyectoapp.ui.components.BottomBar
 import kotlinx.coroutines.flow.firstOrNull
 
 suspend fun getStudents(context: Context): StudentsResponse? {

@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
-import com.example.proyectoapp.navigation.BottomBar
+import com.example.proyectoapp.ui.components.BottomBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
