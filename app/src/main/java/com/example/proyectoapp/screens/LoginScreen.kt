@@ -64,14 +64,18 @@ fun validateLogin(email: String, password: String): Boolean {
 }
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, checkAuth: Boolean) {
     var email: String by rememberSaveable { mutableStateOf("") }
     var password: String by rememberSaveable { mutableStateOf("") }
     var checkingAuth by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
+        if (!checkAuth)
+            return@LaunchedEffect
+
         val authenticated = isAuthenticated(context)
         if (authenticated) {
             navController.navigate(AppScreens.HomeScreen.route) {
@@ -82,7 +86,7 @@ fun LoginScreen(navController: NavController) {
         }
     }
 
-    if (checkingAuth) {
+    if (checkingAuth && checkAuth) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -93,7 +97,7 @@ fun LoginScreen(navController: NavController) {
                 strokeWidth = 4.dp
             )
             Text(
-                text = "Candor...",
+                text = "Cargando...",
                 modifier = Modifier.padding(top = 16.dp),
                 fontSize = 18.sp,
                 color = Color.Gray
@@ -164,6 +168,8 @@ fun LoginScreen(navController: NavController) {
         Spacer(modifier = Modifier.padding(vertical = 20.dp))
         Button(
             onClick = {
+                if (isLoading) return@Button
+
                 if (!validateLogin(email, password)) {
                     Toast.makeText(
                         context, "Datos inválidos",
@@ -172,6 +178,7 @@ fun LoginScreen(navController: NavController) {
                     return@Button
                 }
                 scope.launch {
+                    isLoading = true
                     val response: LoginResponse? = loginController(email, password)
                     if (response == null) {
                         Toast.makeText(
@@ -186,11 +193,12 @@ fun LoginScreen(navController: NavController) {
                     val token = "${response.token_type} ${response.access_token}"
                     dataStore.saveToken(token)
 
-                    navController.navigate(AppScreens.HomeScreen.route) {
+                    navController.navigate(AppScreens.HomeScreen.get()) {
                         popUpTo(0)
                     }
                 }
             },
+            enabled = !isLoading,
             modifier = Modifier
                 .padding(horizontal = 26.dp)
                 .fillMaxWidth(),

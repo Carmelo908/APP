@@ -15,9 +15,13 @@ import com.example.proyectoapp.screens.LoginScreen
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.LoginScreen.get()) {
-        composable(route = AppScreens.LoginScreen.get()) {
-            LoginScreen(navController)
+    NavHost(navController = navController, startDestination = AppScreens.LoginScreen.resolve("true")) {
+        composable(
+            route = AppScreens.LoginScreen.get(),
+            arguments = listOf(navArgument("checkAuth") { type = NavType.BoolType })
+        ) { backStackEntry ->
+            val checkAuth = backStackEntry.arguments?.getBoolean("checkAuth") ?: true
+            LoginScreen(navController, checkAuth)
         }
         composable(route = AppScreens.HomeScreen.get()) {
             HomeScreen(navController)
