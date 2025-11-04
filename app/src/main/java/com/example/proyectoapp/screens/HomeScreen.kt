@@ -45,7 +45,7 @@ fun HomeScreen(navController: NavController) {
             Button(onClick = {
                 scope.launch {
                     logout(context)
-                    navController.navigate(AppScreens.LoginScreen.route)
+                    navController.navigate(AppScreens.LoginScreen.get())
                 }
             }) {
                 Text(text = "Cerrar sesion")

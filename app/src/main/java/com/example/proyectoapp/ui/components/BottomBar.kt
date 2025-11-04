@@ -24,14 +24,14 @@ fun BottomBar(navController: NavController) {
         contentColor = Color.Companion.Black
     ) {
         NavigationBarItem(
-            selected = currentRoute == AppScreens.HomeScreen.route,
-            onClick = { navController.navigate(AppScreens.HomeScreen.route) },
+            selected = currentRoute == AppScreens.HomeScreen.get(),
+            onClick = { navController.navigate(AppScreens.HomeScreen.get()) },
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
             label = { Text("Home") }
         )
         NavigationBarItem(
-            selected = currentRoute == AppScreens.CoursesScreen.route,
-            onClick = { navController.navigate(AppScreens.CoursesScreen.route) },
+            selected = currentRoute == AppScreens.CoursesScreen.get(),
+            onClick = { navController.navigate(AppScreens.CoursesScreen.get()) },
             icon = { Icon(Icons.Default.DateRange, contentDescription = "Cursos") },
             label = { Text("Cursos") }
         )
