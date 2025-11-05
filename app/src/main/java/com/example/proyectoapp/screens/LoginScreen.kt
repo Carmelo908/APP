@@ -87,23 +87,8 @@ fun LoginScreen(navController: NavController, checkAuth: Boolean) {
     }
 
     if (checkingAuth && checkAuth) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            CircularProgressIndicator(
-                color = Color(0xFF6200EE),
-                strokeWidth = 4.dp
-            )
-            Text(
-                text = "Cargando...",
-                modifier = Modifier.padding(top = 16.dp),
-                fontSize = 18.sp,
-                color = Color.Gray
-            )
-            return
-        }
+        SplashScreen(navController)
+        return
     }
     LoginLayout {
 
