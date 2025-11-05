@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun SplashScreen(navController: NavController) {
+fun SplashScreen() {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()

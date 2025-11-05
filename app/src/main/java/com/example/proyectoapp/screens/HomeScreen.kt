@@ -36,7 +36,7 @@ fun HomeScreen(navController: NavController) {
     var isLoading by remember { mutableStateOf(false) }
 
     if (isLoading) {
-        SplashScreen(navController)
+        SplashScreen()
         return
     }
 
