@@ -30,7 +30,7 @@ import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CourseScreen(navController: NavController, courseID: Int) {
+fun CourseScreen(navController: NavController, courseID: Int, courseName: String) {
     var isLoading by remember { mutableStateOf(true) }
     var students by remember { mutableStateOf(listOf<Student>()) }
     val context = LocalContext.current
@@ -52,7 +52,7 @@ fun CourseScreen(navController: NavController, courseID: Int) {
         }
     }
 
-    AppLayout(navController, title = "EduTrack - 1° 1°") { innerPadding ->
+    AppLayout(navController, title = "EduTrack - ${courseName}") { innerPadding ->
         if (isLoading) {
             Column(
                 modifier = Modifier
@@ -65,12 +65,14 @@ fun CourseScreen(navController: NavController, courseID: Int) {
                     color = Color(0xFF174071),
                     strokeWidth = 4.dp
                 )
-                Text("Cargando alumnos...", color = Color.Red)
+                Text("Cargando alumnos...")
             }
+            return@AppLayout
         } else if (students.isEmpty()) {
-            Text("No hay alumnos en el curso ta ta", modifier = Modifier.padding(innerPadding))
+            Text("No hay alumnos en el curso seleccionado", modifier = Modifier.padding(innerPadding))
             return@AppLayout
         }
+
         StudentsGrid(students, innerPadding)
     }
 }

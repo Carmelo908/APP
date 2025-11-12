@@ -31,10 +31,11 @@ fun AppNavigation() {
         }
         composable(
             route = AppScreens.CourseScreen.get(),
-            arguments = listOf(navArgument("courseID") { type = NavType.IntType })
+            arguments = listOf(navArgument("courseID") { type = NavType.IntType }, navArgument("courseName") { type = NavType.StringType })
         ) { backStackEntry ->
             val courseID = backStackEntry.arguments?.getInt("courseID") ?: 1
-            CourseScreen(navController, courseID)
+            val courseName = backStackEntry.arguments?.getString("courseName") ?: "Course"
+            CourseScreen(navController, courseID, courseName)
         }
     }
 }

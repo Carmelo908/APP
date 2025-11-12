@@ -14,5 +14,5 @@ object AppScreens {
     val LoginScreen = Route("login_screen/{checkAuth}")
     val HomeScreen = Route("home_screen")
     val CoursesScreen = Route("courses_screen")
-    val CourseScreen = Route("course_screen/{courseID}")
+    val CourseScreen = Route("course_screen/{courseID}/{courseName}")
 }

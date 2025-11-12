@@ -167,6 +167,7 @@ fun LoginScreen(navController: NavController, checkAuth: Boolean) {
                             Toast.LENGTH_SHORT
                         ).show()
                         password = ""
+                        isLoading = false
                         return@launch
                     }
                     val dataStore = UserPreferences(context)

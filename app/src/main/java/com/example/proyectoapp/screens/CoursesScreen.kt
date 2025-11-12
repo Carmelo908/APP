@@ -41,8 +41,11 @@ suspend fun getCourses(context: Context): List<Course>? {
     val api = ApiService.create()
     val dataStore = UserPreferences(context)
     val token = dataStore.token.firstOrNull()
-    val courses = api.getCourses(token).body()
-    return courses
+    val courses = api.getCourses(token)
+    if (courses.isSuccessful) {
+        return courses.body()
+    }
+    return null
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,42 +88,36 @@ fun CoursesScreen(navController: NavController) {
                         .padding(innerPadding)
                         .fillMaxSize()
                 ) {
-                    items(courses) { course ->
-                        Card(
-                            onClick = {
-                                navController.navigate(route = "course_screen/${course.id}")
-                            },
-                            modifier = Modifier
-                                .height(100.dp)
-                                .padding(5.dp)
-                                .fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            ),
-                            elevation = CardDefaults.cardElevation(
-                                defaultElevation = 4.dp
-                            )
-                        ) {
-                            Row(modifier = Modifier.padding(10.dp)) {
-                                Text(text = "${course.year}° ${course.division}°")
+                    if (courses.isNotEmpty()) {
+                        items(courses) { course ->
+                            Card(
+                                onClick = {
+                                    navController.navigate(route = "course_screen/${course.id}/${course.year}° ${course.division}°")
+                                },
+                                modifier = Modifier
+                                    .height(100.dp)
+                                    .padding(5.dp)
+                                    .fillMaxWidth(),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                ),
+                                elevation = CardDefaults.cardElevation(
+                                    defaultElevation = 4.dp
+                                )
+                            ) {
+                                Row(modifier = Modifier.padding(10.dp)) {
+                                    Text(text = "${course.year}° ${course.division}°")
+                                }
                             }
                         }
+                    } else {
+                        item {
+                            Text(
+                                text = "No se encontraron cursos para el usuario actual.",
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
                     }
-                }
-                Spacer(
-                    modifier = Modifier
-                        .height(16.dp)
-                        .padding(innerPadding)
-                )
-
-                ButtonAdd(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .padding(horizontal = 10.dp, vertical = 5.dp)
-                        .align(Alignment.BottomEnd)
-                )
-                {
-
                 }
             }
         }

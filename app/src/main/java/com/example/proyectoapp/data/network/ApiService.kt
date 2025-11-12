@@ -36,7 +36,7 @@ interface ApiService {
     @GET("me")
     suspend fun me(@Header("Authorization") token: String?): Response<User>
 
-    @GET("courses")
+    @GET("teacher/courses")
     suspend fun getCourses(@Header("Authorization") token: String?): Response<List<Course>>
 
     @GET("students")
