@@ -15,4 +15,6 @@ object AppScreens {
     val HomeScreen = Route("home_screen")
     val CoursesScreen = Route("courses_screen")
     val CourseScreen = Route("course_screen/{courseID}/{courseName}")
+
+
 }

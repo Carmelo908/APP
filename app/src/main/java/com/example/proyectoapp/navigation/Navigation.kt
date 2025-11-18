@@ -6,9 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.proyectoapp.navigation.Route
 import com.example.proyectoapp.screens.CourseScreen
-import com.example.proyectoapp.screens.CoursesScreen
+import com.example.proyectoapp.screens.CourseListScreen
 import com.example.proyectoapp.screens.HomeScreen
 import com.example.proyectoapp.screens.LoginScreen
 
@@ -27,7 +26,7 @@ fun AppNavigation() {
             HomeScreen(navController)
         }
         composable(route = AppScreens.CoursesScreen.get()) {
-            CoursesScreen(navController)
+            CourseListScreen(navController)
         }
         composable(
             route = AppScreens.CourseScreen.get(),

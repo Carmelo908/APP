@@ -10,8 +10,11 @@ A continuación, se muestra una lista con todos los paquetes y subpaquetes de la
   - **model**: clases de objetos de datos simples relacionados con los datos de usuario.
   - **network**: funciones desde las cuales se consume la API.
   - **storage**: funcionalidad relacionada con el almacenamiento temporal de la llave de la API en el dispositivo.
+
 - **navigation**: contiene la funcionalidad de la navegación entre pantallas, la declaración de todas las rutas necesarias para esta navegación y se asocian todas las rutas a una pantalla dentro del paquete *screens*.
-- **screens**: contiene funciones *@composable* que crean las distintas pantallas dentro del programa. cada pantalla contiene en su archivo la funcionalidad necesaria para las acciones que el usuario puede realizar en ellas-
+
+- **screens**: contiene funciones *@composable* que crean las distintas pantallas dentro del programa. cada pantalla contiene en su archivo la funcionalidad necesaria para las acciones que el usuario puede realizar en ellas.
+
 - **ui**: Otros paquetes relacionados con la interfaz de usuario:
   - **components**: contiene algunos de los componentes usados en la aplicación, especialmente componentes complejos o que son usados más de una vez.
   - **layouts**: contiene distribuciones usadas en el programa en funciones *@composable* que construyen un *scaffold* y a las que se le debe poner un contenido.

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,7 +32,6 @@ import androidx.navigation.NavController
 import com.example.proyectoapp.data.storage.UserPreferences
 import com.example.proyectoapp.data.model.Course
 import com.example.proyectoapp.data.network.ApiService
-import com.example.proyectoapp.ui.components.ButtonAdd
 import com.example.proyectoapp.ui.layouts.AppLayout
 import kotlinx.coroutines.flow.firstOrNull
 
@@ -50,7 +48,7 @@ suspend fun getCourses(context: Context): List<Course>? {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CoursesScreen(navController: NavController) {
+fun CourseListScreen(navController: NavController) {
     var isLoading by remember { mutableStateOf(true) }
     var courses by remember { mutableStateOf<List<Course>>(emptyList()) }
     val context = LocalContext.current
